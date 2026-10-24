@@ -1,0 +1,983 @@
+<title>Apuração Challenge Land</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: one column of stacked panels; two panels side by side on wide screens.
+   Palette: cool paper and ink, with the three team colours as the only saturated hues. */
+:root{
+  --bg:#eef1f4; --panel:#ffffff; --panel2:#f5f7f9; --fg:#15202b; --muted:#5d6b7a; --line:#d6dde5;
+  --accent:#0f4c81; --accent-fg:#ffffff; --on-fg:#ffffff;
+  --dark:#5b4bb0; --seven:#12917f; --rocket:#d4502f;
+  --warn:#9a5b00; --gain:#1f7a4d;
+  --chip:#e3e9ef; --chip-fg:#15202b;
+  --display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0c1118; --panel:#151c26; --panel2:#1a2330; --fg:#e7edf3; --muted:#97a4b3; --line:#2a3644;
+    --accent:#86b8ea; --accent-fg:#0c1118; --on-fg:#0c1118;
+    --dark:#9d8ef0; --seven:#3dbfab; --rocket:#f08364;
+    --warn:#e7b35a; --gain:#6cd39b;
+    --chip:#222d3a; --chip-fg:#e7edf3; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0c1118; --panel:#151c26; --panel2:#1a2330; --fg:#e7edf3; --muted:#97a4b3; --line:#2a3644;
+  --accent:#86b8ea; --accent-fg:#0c1118; --on-fg:#0c1118;
+  --dark:#9d8ef0; --seven:#3dbfab; --rocket:#f08364;
+  --warn:#e7b35a; --gain:#6cd39b;
+  --chip:#222d3a; --chip-fg:#e7edf3; color-scheme:dark;
+}
+body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.5 var(--body);}
+.wrap{max-width:1180px;margin:0 auto;padding-block:20px 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:14px;}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+h1,h2,h3{margin:0;font-family:var(--display);text-wrap:balance;}
+h1{font-weight:800;font-size:clamp(26px,4vw,36px);line-height:1.05;letter-spacing:-.01em;}
+h2{font-weight:700;font-size:18px;line-height:1.2;}
+h3{font-weight:700;font-size:18px;}
+.sec{font-size:15px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:10px;}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;}
+.kicker{margin:0 0 4px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);}
+.muted{color:var(--muted);margin:0;}
+.fine{font-size:12.5px;color:var(--muted);margin:6px 0 0;}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums;}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px;min-width:0;}
+.card-h{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px;}
+.pill{display:inline-block;font:600 12px/1 var(--body);padding:5px 9px;border-radius:999px;background:var(--chip);color:var(--chip-fg);white-space:nowrap;}
+.pill[style*="--tc"]{background:var(--tc);color:var(--on-fg);}
+.teams{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;}
+.team{border-top:4px solid var(--tc);}
+.thead{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.thead h2{margin-right:auto;}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--tc);flex:none;}
+.big{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-top:10px;}
+.num{font:600 40px/1 var(--mono);font-variant-numeric:tabular-nums;}
+.bar{display:flex;height:10px;background:var(--chip);border-radius:4px;overflow:hidden;margin-top:10px;}
+.bar .g{background:var(--tc);}
+.bar .p{background:repeating-linear-gradient(45deg,var(--tc) 0 4px,transparent 4px 8px);opacity:.55;}
+.status{display:grid;gap:10px;}
+.status h2{font-size:clamp(18px,2.6vw,22px);}
+.prog{height:6px;background:var(--chip);border-radius:3px;overflow:hidden;}
+.prog span{display:block;height:100%;background:var(--accent);}
+.result{border-left:4px solid var(--accent);}
+.two{display:grid;grid-template-columns:1.1fr 1fr;gap:14px;align-items:start;}
+@media (max-width:820px){.two{grid-template-columns:1fr;}}
+.grp{margin-top:12px;}
+.glabel{margin:0 0 6px;font-size:12.5px;color:var(--muted);}
+.chips{display:flex;flex-wrap:wrap;gap:6px;}
+.chip{font:500 13px/1.2 var(--body);min-height:36px;padding:6px 10px;border-radius:6px;border:1px solid var(--line);background:var(--chip);color:var(--chip-fg);cursor:pointer;}
+.chip:hover:not([disabled]){border-color:var(--muted);}
+.chip[disabled]{opacity:.38;cursor:not-allowed;}
+.chip.on{background:var(--tc,var(--accent));border-color:var(--tc,var(--accent));color:var(--on-fg);}
+.btn{font:600 14px/1 var(--body);padding:11px 14px;border-radius:8px;border:1px solid var(--accent);background:var(--accent);color:var(--accent-fg);cursor:pointer;min-height:40px;}
+.btn.ghost{background:transparent;color:var(--fg);border-color:var(--line);}
+.btn.danger{background:transparent;color:var(--warn);border-color:var(--warn);}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;}
+.trow{border-top:1px solid var(--line);padding:12px 0;}
+.trow:first-of-type{border-top:0;padding-top:0;}
+.trow.mine .thead b{color:var(--tc);}
+.seg{display:flex;gap:6px;margin-left:auto;}
+.tc{margin-top:8px;}
+.joker{margin-top:10px;padding:10px;background:var(--panel2);border-radius:8px;border:1px dashed var(--line);}
+.joker .chips{margin-top:6px;}
+.msg{min-height:1.4em;margin:12px 0 0;color:var(--warn);font-weight:500;}
+.best{display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding:12px;border-radius:8px;background:var(--panel2);border:1px solid var(--line);}
+.bigcard{font:800 44px/1 var(--display);min-width:64px;text-align:center;color:var(--accent);}
+.best .grow{flex:1;min-width:160px;}
+.cands{margin-top:12px;display:grid;gap:6px;}
+.cand{display:grid;grid-template-columns:52px 1fr 64px 84px;gap:10px;align-items:center;font-size:13px;}
+.cand .cc{font-weight:600;}
+.cand .cb{height:8px;background:var(--chip);border-radius:4px;overflow:hidden;}
+.cand .cb span{display:block;height:100%;background:var(--accent);}
+.cand .pv,.cand .ev{font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right;}
+@media (max-width:520px){.cand{grid-template-columns:44px 1fr 56px;}.cand .ev{display:none;}}
+select{font:500 13px var(--body);padding:7px 8px;border-radius:6px;border:1px solid var(--line);background:var(--panel);color:var(--fg);max-width:100%;}
+.regions{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;}
+.region{display:flex;flex-direction:column;gap:6px;}
+.region .card-h{margin-bottom:0;}
+.drows{margin-top:6px;}
+.drow{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:9px 0;border-bottom:1px dashed var(--line);width:100%;background:none;border-left:0;border-right:0;border-top:0;color:var(--fg);font:inherit;text-align:left;}
+.drow:last-child{border-bottom:0;}
+.drow.pend{cursor:pointer;}
+.drow.pend:disabled{cursor:not-allowed;opacity:.5;}
+.drow.pend .muted{font-size:12.5px;}
+.win{font-weight:600;color:var(--tc);white-space:nowrap;}
+.tablewrap{overflow-x:auto;margin:0 -4px;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th,td{padding:9px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top;}
+th{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);font-weight:600;white-space:nowrap;}
+td{white-space:nowrap;}
+td.wrapcell{white-space:normal;}
+.tools textarea{width:100%;box-sizing:border-box;margin-top:10px;font:12px/1.4 var(--mono);padding:8px;border-radius:6px;border:1px solid var(--line);background:var(--panel2);color:var(--fg);}
+.gate{max-width:480px;width:100%;margin:24px auto 0;}
+.gate h2{margin:4px 0 8px;}
+.stack{display:grid;gap:10px;}
+.app{display:grid;gap:14px;min-width:0;}
+label.f{display:grid;gap:4px;font:500 13px var(--body);color:var(--muted);}
+input[data-pw]{font:500 15px var(--body);padding:10px 12px;border-radius:8px;border:1px solid var(--line);background:var(--panel2);color:var(--fg);width:100%;box-sizing:border-box;}
+.admin-box{margin-top:14px;padding:12px;border:1px dashed var(--line);border-radius:8px;background:var(--panel2);}
+.admin-box form{display:grid;gap:10px;}
+.msg:empty{display:none;}
+.hdr-right{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+.modes{display:flex;gap:6px;flex-wrap:wrap;}
+.modes .chip.on{font-weight:600;}
+.testbar{display:grid;gap:12px;border-left:4px solid var(--warn);}
+.testbar .row{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;}
+.testbar .row label.f{min-width:200px;}
+.testbar .row select{min-height:40px;}
+.pill.warn{background:var(--warn);color:var(--on-fg);}
+</style>
+
+<main class="wrap">
+  <header class="top">
+    <div>
+      <p class="kicker">Presidente de Challenge Land · Apuração</p>
+      <h1>Painel da prova</h1>
+    </div>
+    <div class="hdr-right">
+      <div class="modes" id="modes" role="group" aria-label="Modo de uso"></div>
+      <span class="pill" id="roundpill">Carregando</span>
+    </div>
+  </header>
+
+  <p class="msg" id="msgline" role="status"></p>
+
+  <section class="card gate" id="gate" hidden></section>
+
+  <section class="card testbar" id="testbar" hidden>
+    <div>
+      <p class="kicker">Modo teste</p>
+      <p class="muted">Tudo o que você fizer aqui fica só neste aparelho e não mexe no jogo real.</p>
+    </div>
+    <div class="row">
+      <label class="f">Rodadas a simular
+        <select id="simn" data-act="sim-n"></select>
+      </label>
+      <button class="btn" type="button" data-act="simulate">Gerar partida simulada</button>
+      <button class="btn ghost" type="button" data-act="test-reset">Apagar partida de teste</button>
+    </div>
+  </section>
+
+  <div class="app" id="app" hidden>
+    <section id="status"></section>
+    <section class="teams" id="teams"></section>
+    <section class="two">
+      <div class="card" id="sorteio"></div>
+      <div class="card" id="rec"></div>
+    </section>
+    <section class="card" id="register"></section>
+    <section>
+      <h2 class="sec">Regiões e distritos</h2>
+      <div class="regions" id="regions"></div>
+    </section>
+    <section class="card">
+      <h2 class="sec">Histórico de rodadas</h2>
+      <div id="history"></div>
+    </section>
+    <section class="card" id="tools"></section>
+  </div>
+</main>
+
+<script>
+/*ENGINE-START*/
+// ---------- Regras e constantes ----------
+const TEAMS=[{id:'dark',name:'Dark Side',mine:true},{id:'seven',name:'Seven'},{id:'rocket',name:'Rocket'}];
+const SUIT=['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
+const JOKER='C';
+const VAL={}; SUIT.forEach((c,i)=>{VAL[c]=i+2;});
+const REGIONS=[
+  {id:1,name:'Simpsons',votes:2},{id:2,name:'Harry Potter',votes:3},{id:3,name:'Senhor dos Anéis',votes:4},
+  {id:4,name:'DC Comics',votes:5},{id:5,name:'Marvel',votes:6},{id:6,name:'Game of Thrones',votes:7}
+];
+const DISTRICTS=[
+  {id:1,name:'Springfield',region:1},{id:2,name:'Hogsmeade',region:2},{id:3,name:'Terra Média',region:3},
+  {id:4,name:'Gotham City',region:4},{id:5,name:'Metrópolis',region:4},{id:6,name:'Smallville',region:4},
+  {id:7,name:'Wakanda',region:5},{id:8,name:'Asgard',region:5},{id:9,name:'Sokovia',region:5},
+  {id:10,name:'Winterfell',region:6},{id:11,name:"King's Landing",region:6},{id:12,name:'Casterly Rock',region:6},{id:13,name:'Dragonstone',region:6}
+];
+const REG=Object.fromEntries(REGIONS.map(r=>[r.id,r]));
+const DIST=Object.fromEntries(DISTRICTS.map(d=>[d.id,d]));
+// [data do sorteio, hora do sorteio, data da votação, hora da votação]
+const SCHED=[
+  ['30/10','18:00','30/10','18:30'],['30/10','20:00','30/10','20:30'],['31/10','10:30','31/10','11:00'],
+  ['31/10','12:30','31/10','13:00'],['31/10','14:30','31/10','15:00'],['31/10','16:30','31/10','17:00'],
+  ['31/10','18:30','31/10','19:00'],['31/10','20:30','31/10','21:00'],['31/10','23:30','01/11','00:00'],
+  ['01/11','01:30','01/11','02:00'],['01/11','09:30','01/11','10:00'],['01/11','10:30','01/11','11:00'],
+  ['01/11','11:30','01/11','12:00']
+];
+// Perfis dos adversários: k>0 tende a cartas altas, k<0 a cartas baixas; pJ = chance de usar o Coringa por rodada
+const PROFILES={
+  equilibrado:{label:'Equilibrado',k:0,pJ:0.10},
+  agressivo:{label:'Gasta cartas altas cedo',k:2,pJ:0.25},
+  conservador:{label:'Guarda cartas altas',k:-1.5,pJ:0.05}
+};
+const OURS={k:1,pJ:0.15};
+const SIMS=800;
+
+function cl(c){return c===JOKER?'Coringa':c;}
+function removeCard(h,c){const i=h.indexOf(c); if(i>=0) h.splice(i,1);}
+function lowestSuit(h){let best=null; for(const c of h){ if(c===JOKER) continue; if(best===null||VAL[c]<VAL[best]) best=c; } return best;}
+function remaining(rounds){const p=new Set(rounds.map(r=>r.district)); return DISTRICTS.filter(d=>!p.has(d.id));}
+
+// ---------- Reproduz a partida a partir das rodadas registradas ----------
+function replay(rounds){
+  const hands={}; TEAMS.forEach(t=>{hands[t.id]=[...SUIT,JOKER];});
+  const won={}, log=[];
+  rounds.forEach((r,i)=>{
+    const e={n:i+1,district:r.district,plays:{},winner:null,value:null,card:null,tie:false};
+    const finals={};
+    TEAMS.forEach(t=>{
+      const p=r.plays[t.id]||{status:'ok'}, h=hands[t.id];
+      if(p.status==='ausente'){
+        const low=lowestSuit(h); if(low) removeCard(h,low);
+        e.plays[t.id]={type:'ausente',discard:low}; return;
+      }
+      if(p.card===JOKER){
+        removeCard(h,JOKER);
+        if(!p.sub){ e.plays[t.id]={type:'elim'}; return; }
+        removeCard(h,p.sub); finals[t.id]=p.sub;
+        e.plays[t.id]={type:'card',card:JOKER,sub:p.sub,final:p.sub};
+      } else if(p.card){
+        removeCard(h,p.card); finals[t.id]=p.card;
+        e.plays[t.id]={type:'card',card:p.card,final:p.card};
+      } else e.plays[t.id]={type:'elim'};
+    });
+    const ids=Object.keys(finals);
+    if(ids.length){
+      const mx=Math.max(...ids.map(i=>VAL[finals[i]]));
+      const top=ids.filter(i=>VAL[finals[i]]===mx);
+      if(top.length===1){e.winner=top[0]; e.value=mx; e.card=finals[top[0]];}
+      else e.tie=true;
+    }
+    if(r.district) won[r.district]={winner:e.winner,value:e.value,card:e.card};
+    log.push(e);
+  });
+  return {hands,won,log};
+}
+
+// Empate na quantidade de distritos: quem tiver a carta mais alta vence; depois a segunda mais alta.
+function breakRegion(tops,cards){
+  let cand=tops.slice();
+  const len=Math.max(...tops.map(id=>cards[id].length));
+  for(let i=0;i<len&&cand.length>1;i++){
+    const vals=cand.map(id=>cards[id][i]||0);
+    const mx=Math.max(...vals);
+    cand=cand.filter((id,k)=>vals[k]===mx);
+  }
+  return cand.length===1?cand[0]:null;
+}
+
+function regionStatus(won){
+  const ids=TEAMS.map(t=>t.id);
+  return REGIONS.map(R=>{
+    const ds=DISTRICTS.filter(d=>d.region===R.id);
+    const counts={}, cards={};
+    ids.forEach(i=>{counts[i]=0; cards[i]=[];});
+    let pending=0;
+    ds.forEach(d=>{
+      const w=won[d.id];
+      if(!w){pending++; return;}
+      if(w.winner){counts[w.winner]++; cards[w.winner].push(w.value);}
+    });
+    ids.forEach(i=>cards[i].sort((a,b)=>b-a));
+    const top=Math.max(...ids.map(i=>counts[i]));
+    let winner=null, tie=false;
+    if(top>0){
+      const tops=ids.filter(i=>counts[i]===top);
+      if(tops.length===1) winner=tops[0];
+      else {winner=breakRegion(tops,cards); tie=!winner;}
+    }
+    let decided=pending===0;
+    if(!decided&&winner){
+      const others=Math.max(...ids.filter(i=>i!==winner).map(i=>counts[i]));
+      decided=counts[winner]>others+pending;
+    }
+    return {id:R.id,name:R.name,votes:R.votes,ds,counts,cards,pending,winner,tie,decided};
+  });
+}
+
+// Resultado final com critérios de desempate do regulamento
+function finalResult(won){
+  const regs=regionStatus(won), ids=TEAMS.map(t=>t.id);
+  const votes={}, rW={}, dW={};
+  ids.forEach(i=>{votes[i]=0; rW[i]=0; dW[i]=0;});
+  regs.forEach(r=>{ if(r.winner){votes[r.winner]+=r.votes; rW[r.winner]++;} });
+  Object.values(won).forEach(w=>{ if(w&&w.winner) dW[w.winner]++; });
+  const pick=(arr,f)=>{const m=Math.max(...arr.map(f)); return arr.filter(i=>f(i)===m);};
+  let tied=pick(ids,i=>votes[i]), by=null;
+  if(tied.length>1){tied=pick(tied,i=>rW[i]); by='regiões conquistadas';}
+  if(tied.length>1){tied=pick(tied,i=>dW[i]); by='distritos conquistados';}
+  if(tied.length>1){
+    for(const R of [6,5,4,3,2,1]){
+      const r=regs.find(x=>x.id===R);
+      if(r.winner&&tied.includes(r.winner)){tied=[r.winner]; by='votos da região de maior valor'; break;}
+    }
+  }
+  const winner=tied.length===1?tied[0]:null;
+  return {votes,rW,dW,regs,winner,by:winner?by:null};
+}
+
+// ---------- Simulação para a recomendação ----------
+function sample(h,prof){
+  const suits=h.filter(c=>c!==JOKER), hasJ=h.includes(JOKER);
+  if(hasJ&&(suits.length===0||Math.random()<prof.pJ)) return JOKER;
+  if(!suits.length) return null;
+  const w=suits.map(c=>Math.pow(VAL[c],prof.k));
+  const tot=w.reduce((a,b)=>a+b,0);
+  let r=Math.random()*tot;
+  for(let i=0;i<suits.length;i++){ r-=w[i]; if(r<=0) return suits[i]; }
+  return suits[suits.length-1];
+}
+// Substituta do Coringa: a menor carta que vence a maior carta visível das adversárias; se não há, a menor carta.
+function chooseSub(h,vis){
+  const suits=h.filter(c=>c!==JOKER);
+  if(!suits.length) return null;
+  const mx=vis.length?Math.max(...vis):0;
+  const beat=suits.filter(c=>VAL[c]>mx).sort((a,b)=>VAL[a]-VAL[b]);
+  if(beat.length) return beat[0];
+  return suits.slice().sort((a,b)=>VAL[a]-VAL[b])[0];
+}
+function simRound(hands,init,d,won){
+  const finals={};
+  TEAMS.forEach(t=>{
+    const c=init[t.id]; if(!c) return;
+    const h=hands[t.id];
+    removeCard(h,c);
+    if(c===JOKER){
+      const vis=TEAMS.filter(o=>o.id!==t.id&&init[o.id]&&init[o.id]!==JOKER).map(o=>VAL[init[o.id]]);
+      const sub=chooseSub(h,vis); if(!sub) return;
+      removeCard(h,sub); finals[t.id]=sub;
+    } else finals[t.id]=c;
+  });
+  const ids=Object.keys(finals); let winner=null,value=null,card=null;
+  if(ids.length){
+    const mx=Math.max(...ids.map(i=>VAL[finals[i]]));
+    const top=ids.filter(i=>VAL[finals[i]]===mx);
+    if(top.length===1){winner=top[0]; value=mx; card=finals[top[0]];}
+  }
+  won[d]={winner,value,card};
+}
+function simulate(cand,rep,curD,remIds,profile,N){
+  const opp=PROFILES[profile];
+  let wins=0, votes=0;
+  for(let it=0;it<N;it++){
+    const hands={}; TEAMS.forEach(t=>{hands[t.id]=rep.hands[t.id].slice();});
+    const won=Object.assign({},rep.won);
+    const init={}; TEAMS.forEach(t=>{init[t.id]=t.mine?cand:sample(hands[t.id],opp);});
+    simRound(hands,init,curD,won);
+    const rem=remIds.slice();
+    while(rem.length){
+      const d=rem.splice(Math.floor(Math.random()*rem.length),1)[0];
+      const init2={}; TEAMS.forEach(t=>{init2[t.id]=sample(hands[t.id],t.mine?OURS:opp);});
+      simRound(hands,init2,d,won);
+    }
+    const f=finalResult(won);
+    if(f.winner==='dark') wins++;
+    votes+=f.votes.dark;
+  }
+  return {pWin:wins/N, ev:votes/N};
+}
+/*ENGINE-END*/
+// ---------- Estado local (só neste aparelho) ----------
+const DKEY='cl-painel-local-v3';
+const WRITE=new Set(['setup','unlock-access','unlock-admin','register','undo','reset','import']);
+const pad=n=>String(n).padStart(2,'0');
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const tname=id=>id?TEAMS.find(t=>t.id===id).name:'—';
+const pct=x=>(x*100).toFixed(1).replace('.',',')+'%';
+const num1=x=>x.toFixed(1).replace('.',',');
+function blankDraft(){return {district:null,plays:Object.fromEntries(TEAMS.map(t=>[t.id,{status:'ok',card:null,sub:null}]))};}
+
+let S={
+  mode:'real', dbState:'loading', cfgLoaded:false, access:null, match:null, matchId:null,
+  rounds:[], roundsReady:false,
+  testRounds:[], simN:13,
+  unlocked:false, admin:false, busy:false, confirmReset:false,
+  draft:blankDraft(), profile:'equilibrado', io:'', msg:'', pw:{}
+};
+let DB=null, cfgUnsub=null, roundsUnsub=null;
+let REC={key:'',value:null};
+// Rodadas que a tela mostra: no modo teste são as locais; no jogo real, as compartilhadas.
+const RV=()=>S.mode==='teste'?S.testRounds:S.rounds;
+
+function loadLocal(){
+  try{
+    const raw=localStorage.getItem(DKEY); if(!raw) return;
+    const o=JSON.parse(raw);
+    if(o.profile&&PROFILES[o.profile]) S.profile=o.profile;
+    if(o.mode==='real'||o.mode==='teste') S.mode=o.mode;
+    if(Array.isArray(o.testRounds)) S.testRounds=o.testRounds;
+    if(o.simN>=1&&o.simN<=13) S.simN=o.simN;
+    if(o.draft){
+      S.draft.district=o.draft.district??null;
+      TEAMS.forEach(t=>Object.assign(S.draft.plays[t.id],(o.draft.plays||{})[t.id]||{}));
+    }
+  }catch(e){}
+}
+function saveLocal(){
+  try{localStorage.setItem(DKEY,JSON.stringify({draft:S.draft,profile:S.profile,mode:S.mode,testRounds:S.testRounds,simN:S.simN}));}catch(e){}
+}
+
+// ---------- Senhas: PBKDF2-SHA256, 200 mil iterações, sal aleatório ----------
+const enc=new TextEncoder();
+function toB64(buf){const b=new Uint8Array(buf);let s='';for(let i=0;i<b.length;i++)s+=String.fromCharCode(b[i]);return btoa(s);}
+function fromB64(s){return Uint8Array.from(atob(s),c=>c.charCodeAt(0));}
+function newSalt(){return toB64(crypto.getRandomValues(new Uint8Array(16)));}
+function newMatchId(){return Array.from(crypto.getRandomValues(new Uint8Array(6)),b=>b.toString(16).padStart(2,'0')).join('');}
+async function hashPw(pw,salt){
+  const key=await crypto.subtle.importKey('raw',enc.encode(pw),'PBKDF2',false,['deriveBits']);
+  const bits=await crypto.subtle.deriveBits({name:'PBKDF2',salt:fromB64(salt),iterations:200000,hash:'SHA-256'},key,256);
+  return toB64(bits);
+}
+
+function errMsg(e){
+  const map={
+    invalid_argument:'O servidor recusou esta ação. Isso acontece quando a conta não tem permissão para ela.',
+    resource_exhausted:'Muitas ações seguidas. Espere alguns segundos e tente de novo.',
+    quota_exceeded:'A página atingiu o limite de dados. Avise quem administra a página.',
+    unavailable:'Conexão instável. Tente de novo.',
+    revoked:'Seu acesso a esta página foi removido.',
+    not_granted:'Esta página não recebeu acesso aos dados. Abra com a sua conta do Claude.',
+    capability_disabled:'Os dados não estão disponíveis nesta visualização.',
+    capability_removed:'Os dados não estão disponíveis nesta visualização.',
+    transform_error:'Não consegui preparar esta ação. Tente de novo.'
+  };
+  return map[e&&e.code]||'Algo deu errado. Tente de novo.';
+}
+const configured=()=>!!(S.access&&S.match);
+
+// ---------- Conexão com o jogo real ----------
+async function boot(){
+  const c=window.claude;
+  try{ DB=c&&c.use?await c.use('db'):null; }catch(e){ DB=null; }
+  if(!DB){
+    S.dbState='nodb';
+    S.mode='teste';
+    saveLocal(); render(); return;
+  }
+  S.dbState='ok';
+  cfgUnsub=DB.collection('config').onSnapshot(snap=>{
+    const pick=id=>{const d=snap.docs.find(x=>x.id===id); return d&&d.exists?d.data():null;};
+    S.cfgLoaded=true;
+    S.access=pick('access'); S.match=pick('match');
+    const mid=S.match?S.match.id:null;
+    if(mid!==S.matchId) setMatch(mid);
+    if(S.access&&!S.unlocked){
+      try{ if(sessionStorage.getItem('cl-ok')===S.access.hash) S.unlocked=true; }catch(e){}
+    }
+    render();
+  },e=>{ S.dbState='error'; S.msg=errMsg(e); render(); });
+  render();
+}
+
+function setMatch(mid){
+  S.matchId=mid;
+  if(roundsUnsub){roundsUnsub(); roundsUnsub=null;}
+  S.rounds=[]; S.roundsReady=false;
+  if(!mid) return;
+  roundsUnsub=DB.collection(`matches/${mid}/rounds`).onSnapshot(snap=>{
+    S.rounds=snap.docs.filter(d=>d.exists).map(d=>d.data()).filter(Boolean).sort((a,b)=>a.n-b.n);
+    S.roundsReady=true;
+    render();
+  },e=>{ S.msg=errMsg(e); render(); });
+}
+
+// ---------- Partida simulada (só no modo teste) ----------
+function genSimulada(n){
+  const pick=a=>a[Math.floor(Math.random()*a.length)];
+  const rounds=[];
+  for(let i=0;i<n;i++){
+    const remIds=remaining(rounds).map(d=>d.id);
+    const d=pick(remIds);
+    const rep=replay(rounds);
+    const plays={};
+    TEAMS.forEach(t=>{
+      const h=rep.hands[t.id], suits=h.filter(c=>c!==JOKER);
+      if(!suits.length||Math.random()<0.05){plays[t.id]={status:'ausente'};return;}
+      if(h.includes(JOKER)&&Math.random()<0.15) plays[t.id]={status:'ok',card:JOKER,sub:pick(suits)};
+      else plays[t.id]={status:'ok',card:pick(suits)};
+    });
+    rounds.push({n:i+1,district:d,plays,at:new Date().toISOString()});
+  }
+  return rounds;
+}
+
+// ---------- Ações de escrita ----------
+async function register(){
+  const rounds=RV(), rep=replay(rounds), d=S.draft.district, errs=[];
+  if(rounds.length>=13) errs.push('A partida já tem 13 rodadas.');
+  if(!d) errs.push('Escolha o distrito sorteado.');
+  else if(!remaining(rounds).some(x=>x.id===d)) errs.push('Esse distrito já foi disputado.');
+  TEAMS.forEach(t=>{
+    const p=S.draft.plays[t.id], h=rep.hands[t.id];
+    if(p.status!=='ok') return;
+    if(!p.card) errs.push(`${t.name}: escolha uma carta.`);
+    else if(!h.includes(p.card)) errs.push(`${t.name}: a carta ${cl(p.card)} não está mais no baralho.`);
+    else if(p.card===JOKER){
+      if(!p.sub) errs.push(`${t.name}: escolha a substituta do Coringa.`);
+      else if(p.sub===JOKER||!h.includes(p.sub)) errs.push(`${t.name}: a substituta ${cl(p.sub)} não está disponível.`);
+    }
+  });
+  if(errs.length){S.msg=errs.join(' ');return;}
+  const n=rounds.length+1;
+  const plays=JSON.parse(JSON.stringify(S.draft.plays));
+  if(S.mode==='teste'){
+    S.testRounds=[...S.testRounds,{n,district:d,plays,at:new Date().toISOString()}];
+  } else {
+    const ref=DB.doc(`matches/${S.matchId}/rounds/${pad(n)}`);
+    if((await ref.get()).exists){S.msg='Essa rodada já foi registrada por outra pessoa. A tela vai atualizar sozinha.';return;}
+    await ref.set({n,district:d,plays,at:new Date().toISOString()});
+  }
+  S.draft=blankDraft();
+  S.msg=`Rodada ${n} registrada.`;
+}
+
+async function actWrite(a){
+  try{
+    if(a==='register'){ await register(); return; }
+    if(a==='undo'){
+      if(S.mode==='teste'){
+        S.testRounds=S.testRounds.slice(0,-1);
+        S.msg='Última rodada de teste desfeita.';
+        return;
+      }
+      if(!S.admin){S.msg='Desfazer rodada exige o modo administrador.';return;}
+      const last=S.rounds[S.rounds.length-1];
+      if(!last) return;
+      await DB.doc(`matches/${S.matchId}/rounds/${pad(last.n)}`).delete();
+      S.msg='Última rodada desfeita.';
+    }
+    else if(a==='unlock-access'){
+      const h=await hashPw(S.pw['pw-acc']||'',S.access.salt);
+      if(h===S.access.hash){
+        S.unlocked=true; S.pw['pw-acc']=''; S.msg='';
+        try{sessionStorage.setItem('cl-ok',S.access.hash);}catch(e){}
+      } else S.msg='Senha de acesso incorreta.';
+    }
+    else if(a==='unlock-admin'){
+      const snap=await DB.doc('config/admin').get();
+      if(!snap.exists){S.msg='Só editores podem usar a senha de administrador.';return;}
+      const cfg=snap.data();
+      const h=await hashPw(S.pw['pw-adm']||'',cfg.salt);
+      if(h===cfg.hash){S.admin=true; S.pw['pw-adm']=''; S.msg='Modo administrador ligado.';}
+      else S.msg='Senha de administrador incorreta.';
+    }
+    else if(a==='setup'){
+      const p=S.pw;
+      const acc=p['pw-setup-acc']||'', adm=p['pw-setup-adm']||'', adm2=p['pw-setup-adm2']||'';
+      if(acc.length<8||adm.length<8){S.msg='Use pelo menos 8 caracteres em cada senha.';return;}
+      if(acc===adm){S.msg='As duas senhas precisam ser diferentes.';return;}
+      if(adm!==adm2){S.msg='A confirmação da senha de administrador não confere.';return;}
+      const sa=newSalt(), sm=newSalt();
+      const accHash=await hashPw(acc,sa), admHash=await hashPw(adm,sm);
+      await DB.doc('config/admin').set({salt:sm,hash:admHash});
+      await DB.doc('config/match').set({id:newMatchId(),startedAt:new Date().toISOString()});
+      await DB.doc('config/access').set({salt:sa,hash:accHash});
+      S.pw={}; S.unlocked=true; S.admin=true;
+      try{sessionStorage.setItem('cl-ok',accHash);}catch(e){}
+      S.msg='Senhas salvas. Guarde-as em um lugar seguro.';
+    }
+    else if(a==='reset'){
+      if(!S.admin){S.msg='Reiniciar exige o modo administrador.';return;}
+      await DB.doc('config/match').set({id:newMatchId(),startedAt:new Date().toISOString()});
+      S.confirmReset=false;
+      S.msg='Partida reiniciada. Quem abrir a página já vê a nova partida.';
+    }
+    else if(a==='import'){
+      if(!S.admin){S.msg='Restaurar cópia exige o modo administrador.';return;}
+      let o; try{o=JSON.parse(S.io);}catch(e){S.msg='Não consegui ler esses dados. Confira se colou a cópia inteira.';return;}
+      if(!o||!Array.isArray(o.rounds)||o.rounds.length>13){S.msg='Esses dados não parecem uma cópia da partida.';return;}
+      const okRound=r=>r&&DIST[r.district]&&r.plays&&TEAMS.every(t=>r.plays[t.id]);
+      if(!o.rounds.every(okRound)){S.msg='Alguma rodada da cópia está incompleta.';return;}
+      const mid=newMatchId(), at=new Date().toISOString();
+      for(let i=0;i<o.rounds.length;i++){
+        const r=o.rounds[i];
+        await DB.doc(`matches/${mid}/rounds/${pad(i+1)}`).set({n:i+1,district:r.district,plays:r.plays,at});
+      }
+      await DB.doc('config/match').set({id:mid,startedAt:at});
+      S.io=''; S.msg=`Cópia restaurada com ${o.rounds.length} rodadas.`;
+    }
+  }catch(e){ S.msg=errMsg(e); }
+}
+
+function act(a,d){
+  if(!a.startsWith('reset')) S.confirmReset=false;
+  if(!WRITE.has(a)) S.msg='';
+  switch(a){
+    case 'mode': S.mode=d.val; break;
+    case 'simulate':
+      S.testRounds=genSimulada(S.simN);
+      S.draft=blankDraft();
+      S.msg=`Simulação carregada com ${S.testRounds.length} rodadas. Escolha o distrito da próxima rodada para ver a recomendação.`;
+      break;
+    case 'sim-n': S.simN=+d.val; break;
+    case 'test-reset': S.testRounds=[]; S.draft=blankDraft(); S.msg='Partida de teste apagada.'; break;
+    case 'district': S.draft.district=+d.val; break;
+    case 'status': {
+      const p=S.draft.plays[d.team]; p.status=d.val;
+      if(d.val==='ausente'){p.card=null; p.sub=null;}
+      break;
+    }
+    case 'card': {
+      const p=S.draft.plays[d.team]; p.status='ok'; p.card=d.val;
+      if(d.val!==JOKER) p.sub=null;
+      break;
+    }
+    case 'sub': S.draft.plays[d.team].sub=d.val; break;
+    case 'use-rec': {
+      const best=REC.value&&REC.value[0];
+      if(best){const p=S.draft.plays.dark; p.status='ok'; p.card=best.card; p.sub=null;}
+      break;
+    }
+    case 'reset-ask': S.confirmReset=true; break;
+    case 'lock-admin': S.admin=false; S.confirmReset=false; S.msg='Modo administrador desligado.'; break;
+    case 'export':
+      S.io=JSON.stringify({rounds:RV().map(r=>({district:r.district,plays:r.plays})),profile:S.profile});
+      S.msg='Cópia gerada. Guarde o texto para restaurar depois.';
+      break;
+    case 'profile': S.profile=d.val; break;
+    case 'clear-draft': S.draft=blankDraft(); break;
+  }
+  saveLocal(); render();
+}
+
+function onAct(a,d){
+  if(WRITE.has(a)){
+    if(S.busy) return;
+    S.busy=true; render();
+    actWrite(a).finally(()=>{S.busy=false; saveLocal(); render();});
+  } else act(a,d);
+}
+
+// ---------- Telas ----------
+function gateMode(){
+  if(S.mode==='teste') return null;
+  if(S.dbState==='loading') return 'loading';
+  if(S.dbState==='nodb') return 'nodb';
+  if(S.dbState==='error') return 'error';
+  if(!S.cfgLoaded) return 'loading';
+  if(!configured()) return 'setup';
+  if(!S.unlocked) return 'login';
+  if(!S.roundsReady) return 'loading';
+  return null;
+}
+function pwField(id,label,auto){
+  return `<label class="f">${label}<input type="password" id="${id}" data-pw="${id}" value="${esc(S.pw[id]||'')}" autocomplete="${auto||'off'}"></label>`;
+}
+function gateHTML(mode){
+  const dis=S.busy?'disabled':'';
+  switch(mode){
+    case 'loading': return '<p class="kicker">Painel da prova</p><h2>Carregando a partida…</h2>';
+    case 'nodb': return `<p class="kicker">Jogo real indisponível</p>
+      <h2>O jogo real só abre com a sua conta do Claude</h2>
+      <p class="muted">Fora do Claude a partida compartilhada não carrega. Você pode usar o modo teste para simular partidas neste aparelho.</p>
+      <div class="actions"><button class="btn" type="button" data-act="mode" data-val="teste">Ir para o modo teste</button></div>`;
+    case 'error': return `<p class="kicker">Erro</p><h2>Não consegui conectar à partida</h2><p class="muted">${esc(S.msg)}</p>`;
+    case 'setup': return `<p class="kicker">Configuração inicial</p>
+      <h2>Defina as duas senhas</h2>
+      <p class="muted">A senha de acesso abre o painel. A de administrador é necessária para reiniciar a partida ou restaurar uma cópia. Use pelo menos 8 caracteres em cada uma.</p>
+      <form class="stack" data-submit="setup">
+        ${pwField('pw-setup-acc','Senha de acesso','new-password')}
+        ${pwField('pw-setup-adm','Senha de administrador','new-password')}
+        ${pwField('pw-setup-adm2','Repita a senha de administrador','new-password')}
+        <button class="btn" type="submit" ${dis}>Salvar senhas</button>
+        <p class="fine">Só quem tem permissão de editor neste link consegue fazer esta etapa.</p>
+      </form>`;
+    case 'login': return `<p class="kicker">Acesso</p>
+      <h2>Digite a senha de acesso</h2>
+      <form class="stack" data-submit="unlock-access">
+        ${pwField('pw-acc','Senha de acesso','current-password')}
+        <button class="btn" type="submit" ${dis}>Entrar</button>
+      </form>`;
+  }
+  return '';
+}
+
+function modesHTML(){
+  const b=(v,label)=>`<button class="chip ${S.mode===v?'on':''}" type="button" data-act="mode" data-val="${v}" aria-pressed="${S.mode===v}">${label}</button>`;
+  return b('real','Jogo real')+b('teste','Modo teste');
+}
+function simOpts(){
+  return Array.from({length:13},(_,i)=>i+1).map(n=>`<option value="${n}" ${S.simN===n?'selected':''}>${n}</option>`).join('');
+}
+
+function statusHTML(fin,n){
+  if(n>=13){
+    const w=fin.winner;
+    return `<div class="card status result">
+      <p class="kicker">Partida encerrada</p>
+      <h2>${w?`Vencedor: ${esc(tname(w))}`:'Sem vencedor definido'}</h2>
+      <p class="muted">${w?`${fin.votes[w]} votos${fin.by?` · desempate por ${esc(fin.by)}`:''}`:'Empate total sem critério de desempate.'}</p>
+    </div>`;
+  }
+  const s=SCHED[n];
+  return `<div class="card status">
+    <div>
+      <p class="kicker">Próxima rodada</p>
+      <h2>Rodada ${n+1}: sorteio ${s[0]} às ${s[1]} · votação ${s[2]} às ${s[3]}</h2>
+    </div>
+    <div class="prog" aria-hidden="true"><span style="width:${n/13*100}%"></span></div>
+    <p class="muted">${n} de 13 rodadas registradas · ${13-n} restantes</p>
+  </div>`;
+}
+
+function teamsHTML(rep,reg){
+  return TEAMS.map(t=>{
+    const won=reg.filter(r=>r.decided&&r.winner===t.id);
+    const gar=won.reduce((a,r)=>a+r.votes,0);
+    const pot=reg.filter(r=>!r.decided&&r.winner===t.id).reduce((a,r)=>a+r.votes,0);
+    const dw=Object.values(rep.won).filter(w=>w&&w.winner===t.id).length;
+    const hand=rep.hands[t.id], hasJ=hand.includes(JOKER);
+    const cartas=hand.length-(hasJ?1:0);
+    return `<article class="card team" style="--tc:var(--${t.id})">
+      <div class="thead"><span class="dot"></span><h2>${esc(t.name)}</h2>${t.mine?'<span class="pill">minha equipe</span>':''}</div>
+      <div class="big"><span class="num">${gar}</span><span class="muted">votos garantidos${pot?` · +${pot} em disputa`:''}</span></div>
+      <div class="bar" aria-hidden="true"><span class="g" style="width:${gar/27*100}%"></span><span class="p" style="width:${pot/27*100}%"></span></div>
+      <p class="fine">${won.length} regiões · ${dw} distritos · ${cartas} cartas${hasJ?' + Coringa':''} no baralho</p>
+    </article>`;
+  }).join('');
+}
+
+function sorteioHTML(){
+  const played=new Set(RV().map(r=>r.district));
+  const cur=S.draft.district;
+  return `<div class="card-h"><h2>1 · Distrito sorteado</h2>${cur?`<span class="pill">${esc(DIST[cur].name)}</span>`:''}</div>
+    <p class="fine">Toque no distrito que a C.O. sorteou.${S.mode==='real'?' Esta escolha fica só neste aparelho.':''}</p>
+    ${REGIONS.map(R=>`<div class="grp">
+      <p class="glabel">Região ${R.id} · ${esc(R.name)} · ${R.votes} votos</p>
+      <div class="chips">${DISTRICTS.filter(d=>d.region===R.id).map(d=>`<button class="chip ${cur===d.id?'on':''}" type="button" data-act="district" data-val="${d.id}" ${played.has(d.id)?'disabled':''}>${esc(d.name)}</button>`).join('')}</div>
+    </div>`).join('')}`;
+}
+
+function recHTML(rep,n){
+  const opts=Object.entries(PROFILES).map(([k,p])=>`<option value="${k}" ${S.profile===k?'selected':''}>${esc(p.label)}</option>`).join('');
+  const head=`<div class="card-h"><h2>2 · Carta sugerida</h2>
+    <label class="fine" style="margin:0">Adversárias: <select data-act="profile">${opts}</select></label></div>`;
+  if(n>=13) return head+'<p class="muted">Partida encerrada.</p>';
+  if(!S.draft.district) return head+'<p class="muted">Escolha o distrito sorteado para ver a recomendação.</p>';
+  if(!REC.value) return head+'<p class="muted">Calculando as chances de cada carta…</p>';
+  const list=REC.value;
+  if(!list.length) return head+'<p class="muted">Você não tem mais cartas no baralho.</p>';
+  const best=list[0];
+  const note=best.card===JOKER
+    ? '<p class="fine">Coringa: escolha a substituta depois de abrir os envelopes, vendo as cartas iniciais das adversárias.</p>'
+    : '';
+  const mx=Math.max(...list.map(x=>x.pWin),0.0001);
+  return head+`
+    <div class="best">
+      <span class="bigcard">${esc(cl(best.card))}</span>
+      <div class="grow">
+        <div>Chance de vencer: <b class="mono">${pct(best.pWin)}</b></div>
+        <div class="muted">Votos esperados: <span class="mono">${num1(best.ev)}</span></div>
+      </div>
+      <button class="btn" type="button" data-act="use-rec">Usar esta carta</button>
+    </div>
+    ${note}
+    <div class="cands">${list.map(x=>`<div class="cand">
+      <span class="cc">${esc(cl(x.card))}</span>
+      <div class="cb"><span style="width:${x.pWin/mx*100}%"></span></div>
+      <span class="pv">${pct(x.pWin)}</span>
+      <span class="ev">${num1(x.ev)} votos</span>
+    </div>`).join('')}</div>
+    <p class="fine">Simulação de ${SIMS} partidas por carta, com as cartas que restam a cada equipe. As adversárias jogam no perfil escolhido; o resto é estimativa, não garantia.</p>`;
+}
+
+function getRec(rep,remIds){
+  if(!S.draft.district||RV().length>=13) return;
+  const key=JSON.stringify([rep.won,S.draft.district,S.profile,rep.hands.dark]);
+  if(REC.key===key) return;
+  REC={key,value:null};
+  const cur=S.draft.district, ids=remIds.filter(i=>i!==cur);
+  setTimeout(()=>{
+    const list=rep.hands.dark.map(c=>Object.assign({card:c},simulate(c,rep,cur,ids,S.profile,SIMS)))
+      .sort((a,b)=>b.pWin-a.pWin||b.ev-a.ev);
+    if(REC.key===key){REC.value=list; render();}
+  },20);
+}
+
+function cellFor(p){
+  if(!p) return '—';
+  if(p.type==='card') return p.card===JOKER?`Coringa → <b>${esc(p.final)}</b>`:`<b>${esc(p.final)}</b>`;
+  if(p.type==='ausente') return `Ausente · descarta ${esc(p.discard??'—')}`;
+  return 'Sem carta';
+}
+
+function registerHTML(rep,n){
+  const d=S.draft.district;
+  const dis=S.busy?'disabled':'';
+  const rows=TEAMS.map(t=>{
+    const p=S.draft.plays[t.id], h=rep.hands[t.id], abs=p.status==='ausente';
+    let body;
+    if(abs){
+      body=`<p class="fine">Será descartada a menor carta do baralho: <b>${esc(lowestSuit(h)??'nenhuma')}</b></p>`;
+    } else {
+      body=`<div class="chips tc">${h.map(c=>`<button class="chip ${p.card===c?'on':''}" type="button" data-act="card" data-team="${t.id}" data-val="${c}">${esc(cl(c))}</button>`).join('')}</div>`;
+      if(p.card===JOKER){
+        const subs=h.filter(c=>c!==JOKER);
+        const others=TEAMS.filter(o=>o.id!==t.id).map(o=>{
+          const q=S.draft.plays[o.id];
+          const v=q.status==='ausente'?'ausente':(q.card?esc(cl(q.card)):'ainda não escolhida');
+          return `${esc(o.name)}: ${v}`;
+        }).join(' · ');
+        body+=`<div class="joker">
+          <p class="fine">Substituta: escolha depois de abrir os envelopes. Cartas iniciais das adversárias: ${others}.</p>
+          <div class="chips">${subs.map(c=>`<button class="chip ${p.sub===c?'on':''}" type="button" data-act="sub" data-team="${t.id}" data-val="${c}">${esc(c)}</button>`).join('')}</div>
+        </div>`;
+      }
+    }
+    return `<div class="trow ${t.mine?'mine':''}" style="--tc:var(--${t.id})">
+      <div class="thead">
+        <span class="dot"></span><b>${esc(t.name)}</b>${t.mine?'<span class="pill">você</span>':''}
+        <div class="seg">
+          <button class="chip ${abs?'':'on'}" type="button" data-act="status" data-team="${t.id}" data-val="ok">Entregou</button>
+          <button class="chip ${abs?'on':''}" type="button" data-act="status" data-team="${t.id}" data-val="ausente">Ausente</button>
+        </div>
+      </div>
+      ${body}
+    </div>`;
+  }).join('');
+  return `<div class="card-h"><h2>3 · Abertura dos envelopes · rodada ${n}</h2>
+      <span class="pill">${d?esc(DIST[d].name):'escolha o distrito'}</span></div>
+    ${rows}
+    <div class="actions">
+      <button class="btn" type="button" data-act="register" ${dis}>Registrar rodada ${n}</button>
+      <button class="btn ghost" type="button" data-act="clear-draft">Limpar escolhas</button>
+    </div>`;
+}
+
+function regionsHTML(rep,reg,finished){
+  return reg.map(r=>{
+    let status;
+    if(r.decided) status=r.winner?`<span class="pill" style="--tc:var(--${r.winner})">Decidida · ${esc(tname(r.winner))}</span>`:'<span class="pill">Sem vencedor</span>';
+    else if(r.winner) status=`<span class="pill" style="--tc:var(--${r.winner})">Em disputa · ${esc(tname(r.winner))} na frente</span>`;
+    else if(r.tie) status='<span class="pill">Empate em disputa</span>';
+    else status='<span class="pill">Em disputa</span>';
+    const counts=TEAMS.map(t=>`${esc(t.name)} ${r.counts[t.id]}`).join(' · ');
+    const rows=r.ds.map(d=>{
+      const w=rep.won[d.id];
+      if(w) return `<div class="drow"><span>${esc(d.name)}</span>${w.winner?`<span class="win" style="--tc:var(--${w.winner})">${esc(tname(w.winner))} · ${esc(cl(w.card))}</span>`:'<span class="muted">Sem vencedor</span>'}</div>`;
+      return `<button class="drow pend" type="button" data-act="district" data-val="${d.id}" ${finished?'disabled':''}><span>${esc(d.name)}</span><span class="muted">pendente</span></button>`;
+    }).join('');
+    return `<article class="card region">
+      <div class="card-h"><div><p class="kicker">Região ${r.id} · ${r.votes} votos</p><h3>${esc(r.name)}</h3></div></div>
+      <div>${status}</div>
+      <p class="fine">${counts}</p>
+      <div class="drows">${rows}</div>
+    </article>`;
+  }).join('');
+}
+
+function historyHTML(rep,n){
+  if(!rep.log.length) return '<p class="muted">Nenhuma rodada registrada ainda.</p>';
+  const rows=rep.log.map(e=>{
+    const s=SCHED[e.n-1], dd=DIST[e.district];
+    const win=e.winner?`<b class="win" style="--tc:var(--${e.winner})">${esc(tname(e.winner))}</b>`:(e.tie?'Empate':'Sem vencedor');
+    return `<tr>
+      <td class="mono">${e.n}</td>
+      <td class="mono">${s[2]} ${s[3]}</td>
+      <td>${esc(dd.name)}<div class="fine" style="margin:0">${esc(REG[dd.region].name)}</div></td>
+      ${TEAMS.map(t=>`<td>${cellFor(e.plays[t.id])}</td>`).join('')}
+      <td>${win}</td>
+    </tr>`;
+  }).join('');
+  const canUndo=S.mode==='teste'||S.admin;
+  const undo=canUndo
+    ?`<div class="actions"><button class="btn ghost" type="button" data-act="undo" ${S.busy?'disabled':''} ${n?'':'disabled'}>Desfazer última rodada</button></div>`
+    :'<p class="fine">Desfazer a última rodada exige o modo administrador.</p>';
+  return `<div class="tablewrap"><table>
+      <thead><tr><th>#</th><th>Votação</th><th>Distrito</th>${TEAMS.map(t=>`<th>${esc(t.name)}</th>`).join('')}<th>Vencedor</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table></div>${undo}`;
+}
+
+function toolsHTML(){
+  const dis=S.busy?'disabled':'';
+  let adminBox='';
+  if(S.mode==='real'){
+    adminBox=S.admin
+      ?`<div class="admin-box">
+          <p class="fine">Modo administrador ligado. Ele some quando você recarregar a página.</p>
+          <div class="actions">
+            <button class="btn danger" type="button" data-act="${S.confirmReset?'reset':'reset-ask'}" ${dis}>${S.confirmReset?'Confirmar: reiniciar partida':'Reiniciar partida'}</button>
+            <button class="btn ghost" type="button" data-act="import" ${dis}>Restaurar cópia colada acima</button>
+            <button class="btn ghost" type="button" data-act="lock-admin">Desligar modo administrador</button>
+          </div>
+        </div>`
+      :`<div class="admin-box">
+          <form class="stack" data-submit="unlock-admin">
+            <p class="fine">Para reiniciar a partida ou restaurar uma cópia, digite a senha de administrador.</p>
+            ${pwField('pw-adm','Senha de administrador','current-password')}
+            <div class="actions"><button class="btn ghost" type="submit" ${dis}>Ligar modo administrador</button></div>
+          </form>
+        </div>`;
+  }
+  const intro=S.mode==='teste'
+    ?'<p class="fine">Partida de teste: a cópia abaixo só leva e traz dados deste aparelho.</p>'
+    :'<p class="fine">Todos com acesso veem a mesma partida. Gere uma cópia de vez em quando para guardar.</p>';
+  return `<div class="card-h"><h2>Cópia e administração</h2></div>
+    ${intro}
+    <div class="actions"><button class="btn ghost" type="button" data-act="export">Gerar cópia</button></div>
+    <textarea data-io rows="3" aria-label="Cópia dos dados">${esc(S.io)}</textarea>
+    ${adminBox}`;
+}
+
+function render(){
+  const test=S.mode==='teste';
+  const mode=gateMode(), gh=gateHTML(mode);
+  const rounds=RV(), n=rounds.length;
+  $('modes').innerHTML=modesHTML();
+  $('msgline').textContent=S.msg||'';
+  $('testbar').hidden=!test;
+  if(test) $('simn').innerHTML=simOpts();
+  $('gate').hidden=!gh; $('gate').innerHTML=gh;
+  $('app').hidden=!!gh;
+  if(test) $('roundpill').textContent=n>=13?'Teste · partida completa':`Teste · rodada ${n+1} de 13`;
+  else if(mode==='setup'||mode==='login') $('roundpill').textContent='Acesso';
+  else if(mode) $('roundpill').textContent='Carregando';
+  else $('roundpill').textContent=n>=13?'Partida encerrada':`Rodada ${n+1} de 13`;
+  if(gh) return;
+  const rep=replay(rounds), reg=regionStatus(rep.won), fin=finalResult(rep.won);
+  const remIds=remaining(rounds).map(d=>d.id);
+  if(S.draft.district&&!remIds.includes(S.draft.district)) S.draft.district=null;
+  $('status').innerHTML=statusHTML(fin,n);
+  $('teams').innerHTML=teamsHTML(rep,reg);
+  $('sorteio').innerHTML=sorteioHTML();
+  getRec(rep,remIds);
+  $('rec').innerHTML=recHTML(rep,n);
+  $('register').innerHTML=n>=13
+    ?'<p class="muted">As 13 rodadas já foram registradas. Um administrador pode desfazer a última rodada ou reiniciar a partida.</p>'
+    :registerHTML(rep,n+1);
+  $('regions').innerHTML=regionsHTML(rep,reg,n>=13);
+  $('history').innerHTML=historyHTML(rep,n);
+  $('tools').innerHTML=toolsHTML();
+}
+
+// ---------- Eventos ----------
+document.addEventListener('click',e=>{
+  const el=e.target.closest('[data-act]');
+  if(!el||el.disabled) return;
+  onAct(el.dataset.act,el.dataset);
+});
+document.addEventListener('change',e=>{
+  if(e.target.matches('select[data-act]')) act(e.target.dataset.act,{val:e.target.value});
+});
+document.addEventListener('input',e=>{
+  const t=e.target;
+  if(t.matches('[data-io]')) S.io=t.value;
+  else if(t.matches('[data-pw]')) S.pw[t.dataset.pw]=t.value;
+});
+document.addEventListener('submit',e=>{
+  const a=e.target.dataset&&e.target.dataset.submit;
+  if(!a) return;
+  e.preventDefault();
+  onAct(a,{});
+});
+
+loadLocal();
+render();
+boot();
+</script>
