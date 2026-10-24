@@ -4,10 +4,15 @@ Painel para acompanhar a prova: registre o distrito sorteado e as cartas de cada
 
 ## Como abrir
 
-Abra o link da página no navegador. Antes de tudo, ela pede a senha de acesso. Depois, há dois modos, escolhidos no topo da página:
+Abra o link da página no navegador. Antes de tudo, ela pede a senha de acesso, que vale para os dois modos. Depois, escolha o modo no topo da página:
 
-- **Jogo real**: a partida é compartilhada entre todos com acesso. Só funciona quando a página é aberta pelo Claude, com a conta de quem tem permissão no link. Na primeira vez, quem tem permissão de editor define a senha de administrador.
+- **Jogo real**: a partida fica salva no navegador de quem está jogando. Para levar a partida para outro aparelho, use "Gerar cópia" e depois "Restaurar cópia" (esta última exige o modo administrador).
 - **Modo teste**: tudo fica neste aparelho e não mexe no jogo real. Escolha quantas rodadas simular e toque em "Gerar partida simulada" para carregar a partida na tela.
+
+## Senhas
+
+- **Senha de acesso**: abre a página nos dois modos.
+- **Senha de administrador**: liga o modo administrador, que permite reiniciar a partida real, desfazer a última rodada e restaurar cópias. Ela some quando a página é recarregada.
 
 ## Regras
 
@@ -15,7 +20,7 @@ Seguem o regulamento da prova: 13 rodadas, 13 distritos em 6 regiões, 27 votos,
 
 ## Observações
 
-- As senhas não ficam no código. A página guarda só o hash (PBKDF2-SHA256, 200 mil iterações). Use senhas longas.
+- As senhas não ficam no código: a página guarda só o hash (PBKDF2-SHA256, 200 mil iterações). Use senhas longas.
 - O código é minificado para dificultar a leitura no navegador. Isso não é segurança: quem abre a página consegue ver a lógica.
-- Reiniciar a partida ou restaurar uma cópia exige o modo administrador, com a senha de administrador. Quem não tem nível de editor no compartilhamento do link não consegue usar essa senha.
+- Cada navegador tem a sua partida real. Duas pessoas em aparelhos diferentes não veem a mesma partida sem uma cópia.
 - Não há dependências: é um único arquivo HTML.
