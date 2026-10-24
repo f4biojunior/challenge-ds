@@ -16,7 +16,7 @@ Abra o link da página no navegador. Antes de tudo, ela pede a senha de acesso, 
 
 ## Regras
 
-Seguem o regulamento da prova: 13 rodadas, 13 distritos em 6 regiões, 27 votos, Coringa com substituta de 5 minutos, desempates por região e no total. A recomendação de carta é uma estimativa por simulação, com o perfil de adversárias escolhido na tela.
+Seguem o regulamento da prova: 13 rodadas, 13 distritos em 6 regiões, 27 votos, Coringa com substituta de 5 minutos, desempates por região e no total. A recomendação de carta é uma estimativa por simulação: as adversárias seguem perfis estimados pelas jogadas já registradas, e a estratégia da sua equipe (Equilibrado, Agressivo ou Conservador) é escolhida na tela.
 
 ## Observações
 
