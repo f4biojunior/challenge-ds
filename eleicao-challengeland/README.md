@@ -17,6 +17,7 @@ O terceiro modo simula muitos jogos completos de 13 rodadas, sem mexer no jogo r
 - **Vitórias por equipe** e **estratégia mais vencedora**, com a porcentagem de vitórias e a média de votos de cada estratégia por equipe. Quando a diferença é pequena demais para não ser acaso, a tela avisa que é um empate técnico.
 - **Mapa de calor das cartas**: linhas por distrito ou por ordem do sorteio (rodada), colunas por carta. Mostra o uso de cada carta, a chance de ela vencer o distrito ou a chance de a equipe vencer a prova. Dá para filtrar por equipe.
 - **Cartas por distrito**: a mais usada, a que mais vence o distrito e a que mais leva à vitória na prova, comparada com a média.
+- **Distritos mais importantes por rodada**: mapa de calor com o ganho na chance de vencer a prova quando a equipe vence cada distrito, conforme a rodada em que ele foi sorteado, e uma tabela com o distrito que mais vale garantir em cada rodada.
 - **Combinações mais ganhadoras**: as 10 combinações de distrito, rodada e carta que mais levaram à vitória na prova.
 
 10.000 jogos levam cerca de 1 segundo.
@@ -42,12 +43,12 @@ Seguem o regulamento da prova: 13 rodadas, 13 distritos em 6 regiões, 27 votos,
 
 A recomendação é uma estimativa por simulação:
 
-- Para cada carta da Dark Side, o cálculo simula 3.000 partidas do resto da prova e conta em quantas a Dark Side vence. Todas as cartas são testadas nas mesmas partidas sorteadas.
+- Para cada carta da Dark Side, o cálculo simula 10.000 partidas do resto da prova e conta em quantas a Dark Side vence. Todas as cartas são testadas nas mesmas partidas sorteadas.
 - As adversárias seguem perfis (Equilibrado, Agressivo ou Conservador) estimados pelas jogadas já registradas. As jogadas consideram o valor de cada distrito: cartas altas aparecem mais em regiões valiosas, e numa região já decidida a equipe joga a menor carta.
 - Nas rodadas 1 e 2, o cálculo não usa o Coringa: ele não entra nas cartas testadas para a Dark Side nem na previsão das adversárias, e nenhuma equipe o usa nas simulações dessas rodadas.
 - A estratégia da Dark Side (Equilibrado, Agressivo ou Conservador) é escolhida na tela. O resultado de cada estratégia fica guardado enquanto a situação não muda.
 - A melhor carta de cada adversária é calculada do mesmo jeito, do ponto de vista dela, com 1.000 partidas por carta, depois da sugestão da Dark Side.
-- No celular, o cálculo completo no início da partida, no Equilibrado, pode passar de 20 segundos.
+- O cálculo completo no início da partida, no Equilibrado, leva cerca de 20 segundos no computador e mais no celular. Ele anda em blocos, com o andamento em porcentagem, e o resultado de cada carta com cada plano fica guardado: trocar de estratégia reaproveita o que já foi calculado.
 
 ## Observações
 
