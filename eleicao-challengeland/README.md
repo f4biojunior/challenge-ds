@@ -9,6 +9,18 @@ Abra o link da página no navegador. Antes de tudo, ela pede a senha de acesso, 
 - **Jogo real**: a partida fica salva no navegador de quem está jogando. Para levar a partida para outro aparelho, use "Gerar cópia" e depois "Restaurar cópia" (esta última exige o modo administrador).
 - **Modo teste**: tudo fica neste aparelho e não mexe no jogo real. Escolha quantas rodadas simular e toque em "Gerar partida simulada" para carregar a partida na tela. Na partida simulada, a Dark Side joga pela estratégia selecionada em "Carta sugerida" (Agressivo, Conservador ou Equilibrado). A Seven e a Rocket jogam pela estratégia escolhida para cada uma no modo teste: Ao acaso, Equilibrado, Agressivo ou Conservador. As estratégias seguem o mesmo modelo do cálculo; "Ao acaso" sorteia qualquer carta. Nenhuma equipe fica ausente. Com mais de 5 rodadas, aparece uma **análise da simulação** abaixo de "Como está agora": por que a equipe da frente está ganhando (regiões e cartas decisivas), quanto o sorteio dos locais pesou (a partida é refeita com 2.000 sorteios de distritos, mantendo as cartas de cada rodada) e o que definiu as cartas de cada equipe. A análise some se a partida for alterada à mão.
 
+## Gerar estatísticas
+
+O terceiro modo simula muitos jogos completos de 13 rodadas, sem mexer no jogo real nem no modo teste:
+
+- Escolha a quantidade de jogos (de 100 a 50.000) e a estratégia de cada equipe: Ao acaso, Equilibrado, Agressivo, Conservador ou "Variar a cada jogo", que sorteia uma estratégia por jogo e permite comparar as estratégias.
+- **Vitórias por equipe** e **estratégia mais vencedora**, com a porcentagem de vitórias e a média de votos de cada estratégia por equipe. Quando a diferença é pequena demais para não ser acaso, a tela avisa que é um empate técnico.
+- **Mapa de calor das cartas**: linhas por distrito ou por ordem do sorteio (rodada), colunas por carta. Mostra o uso de cada carta, a chance de ela vencer o distrito ou a chance de a equipe vencer a prova. Dá para filtrar por equipe.
+- **Cartas por distrito**: a mais usada, a que mais vence o distrito e a que mais leva à vitória na prova, comparada com a média.
+- **Combinações mais ganhadoras**: as 10 combinações de distrito, rodada e carta que mais levaram à vitória na prova.
+
+10.000 jogos levam cerca de 1 segundo.
+
 ## Senhas
 
 - **Senha de acesso**: abre a página nos dois modos.
