@@ -32,6 +32,7 @@ A recomendação é uma estimativa por simulação:
 
 - Para cada carta da Dark Side, o cálculo simula 3.000 partidas do resto da prova e conta em quantas a Dark Side vence. Todas as cartas são testadas nas mesmas partidas sorteadas.
 - As adversárias seguem perfis (Equilibrado, Agressivo ou Conservador) estimados pelas jogadas já registradas. As jogadas consideram o valor de cada distrito: cartas altas aparecem mais em regiões valiosas, e numa região já decidida a equipe joga a menor carta.
+- Nas rodadas 1 e 2, o cálculo não usa o Coringa: ele não entra nas cartas testadas para a Dark Side nem na previsão das adversárias, e nenhuma equipe o usa nas simulações dessas rodadas.
 - A estratégia da Dark Side (Equilibrado, Agressivo ou Conservador) é escolhida na tela. O resultado de cada estratégia fica guardado enquanto a situação não muda.
 - A melhor carta de cada adversária é calculada do mesmo jeito, do ponto de vista dela, com 1.000 partidas por carta, depois da sugestão da Dark Side.
 - No celular, o cálculo completo no início da partida, no Equilibrado, pode passar de 20 segundos.
