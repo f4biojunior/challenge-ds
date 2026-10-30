@@ -7,7 +7,7 @@ Painel para acompanhar a prova: registre o distrito sorteado e as cartas de cada
 Abra o link da página no navegador. Antes de tudo, ela pede a senha de acesso, que vale para os dois modos. Depois, escolha o modo no topo da página:
 
 - **Jogo real**: a partida fica salva no navegador de quem está jogando. Para levar a partida para outro aparelho, use "Gerar cópia" e depois "Restaurar cópia" (esta última exige o modo administrador).
-- **Modo teste**: tudo fica neste aparelho e não mexe no jogo real. Escolha quantas rodadas simular e toque em "Gerar partida simulada" para carregar a partida na tela.
+- **Modo teste**: tudo fica neste aparelho e não mexe no jogo real. Escolha quantas rodadas simular e toque em "Gerar partida simulada" para carregar a partida na tela. Na partida simulada, a Dark Side joga pela estratégia selecionada em "Carta sugerida" (Agressivo, Conservador ou Equilibrado), seguindo o mesmo modelo do cálculo, e as adversárias jogam cartas ao acaso. Nenhuma equipe fica ausente.
 
 ## Senhas
 
